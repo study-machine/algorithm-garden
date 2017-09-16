@@ -1,10 +1,10 @@
 /**
  * Created by wxy on 17-9-16.
  */
-const RootX = canvas.width / 2;
+const RootX = stage.canvas.width / 2;
 const RootY = 50;
-const PosOffset = canvas.width / 5;
-const BallSize = 20 + canvas.width / 100
+const PosOffset = stage.canvas.width / 5;
+const BallSize = 20 + stage.canvas.width / 100
 
 class BallNode extends Node {
     constructor(k, v, parent, level, direction) {
@@ -15,13 +15,15 @@ class BallNode extends Node {
             this.x = parent.x + (PosOffset * direction) / level + 1;
             this.y = RootY * (level + 1);
         }
-        if (parent) {
-            // linkBall(parent.x, parent.y, this.x, this.y)
-        }
-        // drawBall(this.x, this.y, k, level)
     }
 }
 class BallBST extends BST {
+    constructor(stage) {
+        super();
+        this.stage = stage
+        log(stage)
+    }
+
     __insert(node, k, v, parent = null, direction = 0) {
         if (!node) {
             this.count++;
@@ -41,7 +43,6 @@ class BallBST extends BST {
     __inOrder(node) {
         if (!node)
             return;
-
         this.__inOrder(node.left);
         this.__drawBall(node)
         this.__linkBall(node)
@@ -49,18 +50,9 @@ class BallBST extends BST {
     }
 
     __drawBall(node) {
-        var x = node.x
-        var y = node.y
-        var fix = node.level
-        var text = node.k.toString()
-        ctx.beginPath()
-        ctx.fillStyle = "rgba(200, 60, 60, 1)";
-        ctx.arc(x, y, BallSize - fix * 2, 0, 2 * Math.PI)
-        ctx.fill()
-        ctx.closePath()
-        ctx.fillStyle = "#000";
-
-        ctx.fillText(text.toString(), x - 10, y)
+        var size = BallSize - node.level * 2
+        this.stage.drawBall(node.x, node.y, size)
+        this.stage.drawText(node.x, node.y, node.k,(8-node.level))
     }
 
     __linkBall(node) {
@@ -74,13 +66,7 @@ class BallBST extends BST {
             direction = 1;
         node.x = p.x + (PosOffset * direction) / node.level + 1;
         node.y = RootY * (node.level + 1);
-
-        ctx.beginPath()
-        ctx.strokeStyle = "rgba(200, 0, 0, 0.3)";
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(node.x, node.y);
-        ctx.closePath()
-        ctx.stroke();
+        this.stage.drawLine(node.x, node.y, p.x, p.y)
     }
 }
 

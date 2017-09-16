@@ -8,6 +8,7 @@
 
 <body>
 <button id="btnFresh">刷新</button>
+<input type="text">
 <canvas id="myCanvas"></canvas>
 <script src="js/utils/utils.js"></script>
 <script src="js/utils/canvas.js"></script>
@@ -16,28 +17,25 @@
 
 <script>
 
-    var testBallBST = function () {
-        var bst = new BallBST();
-        var n = 15
+    var freshBST = function (n) {
+        var bst = new BallBST(stage);
         for (var i = 0; i < n; i++) {
-
             var x = getRandom(n)
             while (bst.search(x)) {
                 x = getRandom(n)
             }
             bst.insert(x, getRandom(n * 100))
         }
-//        bst.levelOrder()
         bst.inOrder()
         return bst;
     };
-    var test = testBallBST()
+    var test = freshBST(15)
 
 
     var eBtnFresh = document.querySelector('#btnFresh');
     eBtnFresh.onclick = function () {
-        clearCanvas(ctx, canvas)
-        testBallBST()
+        stage.clearCanvas()
+        freshBST(15)
     }
 
 </script>
