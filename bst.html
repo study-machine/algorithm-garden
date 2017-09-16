@@ -9,170 +9,13 @@
 <body>
 <button id="btnFresh">刷新</button>
 <canvas id="myCanvas"></canvas>
+<script src="js/utils/utils.js"></script>
+<script src="js/utils/canvas.js"></script>
+<script src="js/bst/bst.js"></script>
+<script src="js/bst/ball-bst.js"></script>
+
 <script>
-    function getRandom(max) {
-        return Math.floor(Math.random() * max + 1);
-    }
-    var log = console.log.bind(console);
-    var canvas = document.querySelector('#myCanvas');
-    canvas.width = document.body.clientWidth;
-    canvas.height = 5000;
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#abc';
-    ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
-    ctx.font = "20px Monospace";
-    function clearCanvas(ctx, canvas) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-    const ROOT_X = canvas.width / 2;
-    const ROOT_Y = 50;
-    const posOffset = canvas.width / 5;
-    const BallSize = 20 + canvas.width / 100
 
-    function drawBall(x, y, k, fix) {
-        ctx.beginPath()
-        ctx.fillStyle = "rgba(200, 60, 60, 1)";
-        ctx.arc(x, y, BallSize - fix * 2, 0, 2 * Math.PI)
-        ctx.fill()
-        ctx.closePath()
-        ctx.fillStyle = "#000";
-
-        ctx.fillText(k.toString(), x - 10, y)
-    }
-    function linkBall(startX, startY, endX, endY) {
-        ctx.beginPath()
-        ctx.strokeStyle = "rgba(200, 0, 0, 0.3)";
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(endX, endY);
-        ctx.closePath()
-        ctx.stroke();
-    }
-
-
-    class Node {
-        constructor(k, v, parent, level, direction) {
-            this.k = k;
-            this.v = v;
-
-            this.parent = parent;
-            this.level = level;
-
-            this.left = null;
-            this.right = null;
-        }
-
-    }
-    class BST {
-        constructor() {
-            this.root = null;
-            this.count = 0;
-        }
-
-        __nodeLevel(node) {
-            if (!node)
-                return -1;
-            var l = 0;
-            while (node.parent) {
-                l++;
-                node = node.parent;
-            }
-            return l
-
-        }
-
-        insert(k, v) {
-            this.root = this.__insert(this.root, k, v)
-        }
-
-        __insert(node, k, v, parent = null) {
-            if (!node) {
-                this.count++;
-                var parentLevel = this.__nodeLevel(parent);
-                return new Node(k, v, parent, parentLevel + 1)
-            }
-            if (k === node.k)
-                node.v = v;
-            if (k < node.k)
-                node.left = this.__insert(node.left, k, v, node);
-            if (k > node.k)
-                node.right = this.__insert(node.right, k, v, node);
-            return node
-        }
-
-        search(k) {
-            return this.__search(this.root, k);
-        }
-
-        __search(node, k) {
-            if (!node)
-                return null;
-            if (k === node.k)
-                return node;
-            else if (k < node.k)
-                return this.__search(node.left, k);
-            else
-                return this.__search(node.right, k);
-        }
-
-        inOrder() {
-            this.__inOrder(this.root);
-        }
-
-        __inOrder(node) {
-            if (!node)
-                return;
-
-            this.__inOrder(node.left);
-            log(node.k, node.v, node.level);
-            this.__inOrder(node.right);
-        }
-
-        levelOrder() {
-            var l = [];
-            l.push(this.root);
-            while (l.length > 0) {
-                var node = l.shift();
-                log(node.k, node.v, node.level);
-                if (node.left) l.push(node.left);
-                if (node.right) l.push(node.right);
-            }
-        }
-    }
-
-    class BallNode extends Node {
-        constructor(k, v, parent, level, direction) {
-            super(k, v, parent, level, direction)
-
-            this.x = ROOT_X;
-            this.y = ROOT_Y;
-            if (direction !== 0) {
-                this.x = parent.x + (posOffset * direction) / level + 1;
-                this.y = ROOT_Y * (level + 1);
-            }
-            if (parent) {
-                linkBall(parent.x, parent.y, this.x, this.y)
-            }
-            drawBall(this.x, this.y, k, level)
-        }
-    }
-    class BallBST extends BST {
-        __insert(node, k, v, parent = null, direction = 0) {
-            if (!node) {
-                this.count++;
-                var parentLevel = this.__nodeLevel(parent);
-                return new BallNode(k, v, parent, parentLevel + 1, direction)
-            }
-            if (k === node.k)
-                node.v = v;
-            if (k < node.k)
-                node.left = this.__insert(node.left, k, v, node, -1);
-            if (k > node.k)
-                node.right = this.__insert(node.right, k, v, node, 1);
-            return node
-        }
-
-
-    }
     var testBallBST = function () {
         var bst = new BallBST();
         var n = 15
@@ -184,11 +27,11 @@
             }
             bst.insert(x, getRandom(n * 100))
         }
-        //    bst.inOrder()
-        bst.levelOrder()
+//        bst.levelOrder()
+        bst.inOrder()
         return bst;
     };
-    testBallBST()
+    var test = testBallBST()
 
 
     var eBtnFresh = document.querySelector('#btnFresh');
