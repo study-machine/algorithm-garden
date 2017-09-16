@@ -29,7 +29,6 @@ class BST {
             node = node.parent;
         }
         return l
-
     }
 
     insert(k, v) {
@@ -66,6 +65,18 @@ class BST {
             return this.__search(node.right, k);
     }
 
+    preOrder() {
+        this.__preOrder(this.root);
+    }
+
+    __preOrder(node) {
+        if (!node)
+            return;
+        log(node.k, node.v, node.level);
+        this.__preOrder(node.left);
+        this.__preOrder(node.right);
+    }
+
     inOrder() {
         this.__inOrder(this.root);
     }
@@ -73,7 +84,7 @@ class BST {
     __inOrder(node) {
         if (!node)
             return;
-
+        log(node.k, node.v, node.level);
         this.__inOrder(node.left);
         log(node.k, node.v, node.level);
         this.__inOrder(node.right);
@@ -89,4 +100,48 @@ class BST {
             if (node.right) l.push(node.right);
         }
     }
+
+    minimum() {
+        if (this.count) {
+            var node = this.root
+            while (node.left)
+                node = node.left;
+            return node
+        }
+    }
+
+    maximum() {
+        if (this.count) {
+            var node = this.root
+            while (node.right)
+                node = node.right;
+            return node
+        }
+    }
+
+    removeMin(node) {
+        this.root = this.__removeMin(this.root)
+    }
+
+    __removeMin(node) {
+        if (!node)
+            return
+        if (!node.left) {
+            this.count--
+            return node.right
+
+        }
+        node.left = this.removeMin(node.left)
+        return node
+    }
+
+    remove(k) {
+
+    }
+
+    __remove(node, k) {
+
+    }
+
+
 }

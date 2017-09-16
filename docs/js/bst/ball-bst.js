@@ -7,22 +7,22 @@ const PosOffset = stage.canvas.width / 5;
 const BallSize = 20 + stage.canvas.width / 100
 
 class BallNode extends Node {
-    constructor(k, v, parent, level, direction) {
-        super(k, v, parent, level, direction)
-        this.x = RootX;
-        this.y = RootY;
-        if (direction !== 0) {
-            this.x = parent.x + (PosOffset * direction) / level + 1;
-            this.y = RootY * (level + 1);
-        }
-    }
+    // constructor(k, v, parent, level, direction) {
+    //     super(k, v, parent, level, direction)
+    //     // this.x = RootX;
+    //     // this.y = RootY;
+    //     // if (direction !== 0) {
+    //     //     this.x = parent.x + (PosOffset * direction) / level + 1;
+    //     //     this.y = RootY * (level + 1);
+    //     // }
+    // }
 }
 class BallBST extends BST {
     constructor(stage) {
         super();
         this.stage = stage
-        log(stage)
     }
+
 
     __insert(node, k, v, parent = null, direction = 0) {
         if (!node) {
@@ -33,26 +33,48 @@ class BallBST extends BST {
         if (k === node.k)
             node.v = v;
         if (k < node.k)
-            node.left = this.__insert(node.left, k, v, node, -1);
+            node.left = this.__insert(node.left, k, v, node,);
         if (k > node.k)
-            node.right = this.__insert(node.right, k, v, node, 1);
+            node.right = this.__insert(node.right, k, v, node);
         return node
     }
 
 
-    __inOrder(node) {
+    __preOrder(node) {
+        // 这里必须用preOrder来update,layerOrder也可以，inOrder和postOrder都不行
+        // 因为，递归下去再回来，父球没有定位xy，子球也没法定位
         if (!node)
             return;
-        this.__inOrder(node.left);
+        this.__updateXY(node)
         this.__drawBall(node)
         this.__linkBall(node)
-        this.__inOrder(node.right);
+        this.__preOrder(node.left);
+        this.__preOrder(node.right);
     }
+
+
+    __updateXY(node) {
+        var p = node.parent
+        if (!p) {
+            node.x = RootX;
+            node.y = RootY;
+            return
+        }
+        var direction = 0;
+        if (p.left && p.left === node)
+            direction = -1;
+        else if (p.right && p.right === node)
+            direction = 1;
+
+        node.x = p.x + (PosOffset * direction) / node.level + 1;
+        node.y = RootY * (node.level + 1);
+    }
+
 
     __drawBall(node) {
         var size = BallSize - node.level * 2
         this.stage.drawBall(node.x, node.y, size)
-        this.stage.drawText(node.x, node.y, node.k,(8-node.level))
+        this.stage.drawText(node.x, node.y, node.k, (8 - node.level))
     }
 
     __linkBall(node) {
@@ -67,6 +89,11 @@ class BallBST extends BST {
         node.x = p.x + (PosOffset * direction) / node.level + 1;
         node.y = RootY * (node.level + 1);
         this.stage.drawLine(node.x, node.y, p.x, p.y)
+    }
+
+    removeMin() {
+        this.root = this.__removeMin(self.root)
+        this.inOrder()
     }
 }
 
