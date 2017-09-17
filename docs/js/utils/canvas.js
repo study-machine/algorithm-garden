@@ -22,10 +22,10 @@ class Stage {
         this.ctx.closePath()
     }
 
-    drawText(x, y, text, fix = 0) {
-        this.ctx.font = "20px Monospace";
+    drawText(x, y, text, fixX = 0, fixY = 0, fontSize = 20) {
+        this.ctx.font = fontSize + "px Monospace";
         this.ctx.fillStyle = Color.BLACK;
-        this.ctx.fillText(text.toString(), x - fix, y)
+        this.ctx.fillText(text.toString(), x - fixX, y - fixY)
     }
 
     drawLine(starX, starY, endX, endY) {

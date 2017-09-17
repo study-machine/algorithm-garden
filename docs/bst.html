@@ -7,8 +7,11 @@
 </head>
 
 <body>
+<input id='key' type="text">
 <button id="btnFresh">刷新</button>
-<input type="text">
+<button id="btnInsert">插入</button>
+<button id="btnRemove">移除</button>
+<button id="btnRemoveMin">删除最小</button>
 <canvas id="myCanvas"></canvas>
 <script src="js/utils/utils.js"></script>
 <script src="js/utils/canvas.js"></script>
@@ -26,17 +29,40 @@
             }
             bst.insert(x, getRandom(n * 100))
         }
-        bst.preOrder()
+        bst.reDraw()
         return bst;
     };
-    var test = freshBST(15)
+    var testBst = freshBST(15)
 
 
-    var eBtnFresh = document.querySelector('#btnFresh');
-    eBtnFresh.onclick = function () {
-        stage.clearCanvas()
-        freshBST(15)
+    function bindAll(selectors, eventName, callback) {
+        elems = document.querySelectorAll(selectors)
+        for (var e of elems) {
+            e.addEventListener(eventName, function (event) {
+                callback(event)
+            })
+        }
     }
+    bindAll('button', 'click', function (event) {
+        var id = event.target.id
+        var num = parseInt(document.querySelector('#key').value)
+        if (id === 'btnFresh') {
+            testBst=freshBST(15)
+        }
+        if (id === 'btnInsert') {
+            testBst.insert(num, getRandom(100))
+            testBst.reDraw()
+
+        }
+        if (id === 'btnRemove') {
+            testBst.removeBall(num)
+        }
+        if (id === 'btnRemoveMin') {
+            testBst.removeMinBall()
+        }
+
+
+    })
 
 </script>
 </body>

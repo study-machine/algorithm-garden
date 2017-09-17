@@ -20,6 +20,12 @@ class BST {
         this.count = 0;
     }
 
+
+    nodeLevel(k) {
+        var node = this.search(k)
+        return this.__nodeLevel(node)
+    }
+
     __nodeLevel(node) {
         if (!node)
             return -1;
@@ -102,12 +108,13 @@ class BST {
     }
 
     minimum() {
-        if (this.count) {
-            var node = this.root
-            while (node.left)
-                node = node.left;
-            return node
-        }
+        return this.__minimum(this.root).k
+    }
+
+    __minimum(node) {
+        while (node.left)
+            node = node.left;
+        return node
     }
 
     maximum() {
@@ -119,27 +126,69 @@ class BST {
         }
     }
 
-    removeMin(node) {
+    removeMin() {
         this.root = this.__removeMin(this.root)
     }
 
     __removeMin(node) {
+        // debugger
         if (!node)
             return
         if (!node.left) {
             this.count--
+            // 同时修改parent
+            if (node.right)
+                node.right.parent = node.parent;
             return node.right
 
         }
-        node.left = this.removeMin(node.left)
+        node.left = this.__removeMin(node.left)
         return node
     }
 
     remove(k) {
-
+        this.root = this.__remove(this.root, k)
     }
 
     __remove(node, k) {
+        if (!node)
+            return;
+        if (k < node.k) {
+            node.left = this.__remove(node.left, k);
+            return node
+        }
+        if (k > node.k) {
+            node.right = this.__remove(node.right, k);
+            return node
+        }
+
+        if (k === node.k) {
+            if (!node.left) {
+                this.count--;
+                return node.right
+            }
+            else if (!node.right) {
+                this.count--;
+                return node.left
+            }
+            else {//左右都有节点
+                // debugger
+                // successor取代node，父亲和孩子都要修改
+                var successor = this.__minimum(node.right)
+                successor.right = this.__removeMin(node.right)
+                successor.left = node.left
+
+
+                successor.parent = node.parent;
+                if (successor.left)
+                    successor.left.parent = successor;
+                if (successor.right)
+                    successor.right.parent = successor;
+                successor.level = this.__nodeLevel(successor)
+
+                return successor
+            }
+        }
 
     }
 

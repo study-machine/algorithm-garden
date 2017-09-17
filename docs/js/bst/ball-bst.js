@@ -23,6 +23,10 @@ class BallBST extends BST {
         this.stage = stage
     }
 
+    // insert() {
+    //     this.root = this.__insert(this.root)
+    //     this.reDraw()
+    // }
 
     __insert(node, k, v, parent = null, direction = 0) {
         if (!node) {
@@ -75,6 +79,8 @@ class BallBST extends BST {
         var size = BallSize - node.level * 2
         this.stage.drawBall(node.x, node.y, size)
         this.stage.drawText(node.x, node.y, node.k, (8 - node.level))
+        if (node.parent)
+            this.stage.drawText(node.x, node.y, node.parent.k, 5, 20, 10);
     }
 
     __linkBall(node) {
@@ -91,10 +97,21 @@ class BallBST extends BST {
         this.stage.drawLine(node.x, node.y, p.x, p.y)
     }
 
-    removeMin() {
-        this.root = this.__removeMin(self.root)
-        this.inOrder()
+    reDraw() {
+        this.stage.clearCanvas()
+        this.preOrder()
     }
+
+    removeMinBall() {
+        this.removeMin()
+        this.reDraw()
+    }
+
+    removeBall(k) {
+        this.remove(k)
+        this.reDraw()
+    }
+
 }
 
 
