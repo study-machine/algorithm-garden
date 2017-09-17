@@ -7,11 +7,26 @@
 </head>
 
 <body>
-<input id='key' type="text">
+<select id="amount">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="20">20</option>
+    <option value="25">25</option>
+    <option value="30">30</option>
+</select>
+<select id="simple">
+    <option value="1">连续</option>
+    <option value="10">散布</option>
+</select>
 <button id="btnFresh">刷新</button>
+<span> | </span>
+<input id='key' type="text" style="width: 30px;text-align: center;">
 <button id="btnInsert">插入</button>
 <button id="btnRemove">移除</button>
+<span> | </span>
 <button id="btnRemoveMin">删除最小</button>
+<button id="btnRemoveMax">删除最大</button>
 <canvas id="myCanvas"></canvas>
 <script src="js/utils/utils.js"></script>
 <script src="js/utils/canvas.js"></script>
@@ -20,19 +35,19 @@
 
 <script>
 
-    var freshBST = function (n) {
+    var freshBST = function (n, simple) {
         var bst = new BallBST(stage);
         for (var i = 0; i < n; i++) {
-            var x = getRandom(n)
+            var x = getRandom(n * simple)
             while (bst.search(x)) {
-                x = getRandom(n)
+                x = getRandom(n * simple)
             }
             bst.insert(x, getRandom(n * 100))
         }
         bst.reDraw()
         return bst;
     };
-    var testBst = freshBST(15)
+    var testBst = freshBST(15, 1)
 
 
     function bindAll(selectors, eventName, callback) {
@@ -46,8 +61,10 @@
     bindAll('button', 'click', function (event) {
         var id = event.target.id
         var num = parseInt(document.querySelector('#key').value)
+        var simple = parseInt(document.querySelector('#simple').value)
+        var amount = parseInt(document.querySelector('#amount').value)
         if (id === 'btnFresh') {
-            testBst=freshBST(15)
+            testBst = freshBST(amount, simple)
         }
         if (id === 'btnInsert') {
             testBst.insert(num, getRandom(100))
@@ -59,6 +76,9 @@
         }
         if (id === 'btnRemoveMin') {
             testBst.removeMinBall()
+        }
+        if (id === 'btnRemoveMax') {
+            testBst.removeMaxBall()
         }
 
 

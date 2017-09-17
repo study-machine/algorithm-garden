@@ -146,8 +146,28 @@ class BST {
         return node
     }
 
+    removeMax() {
+        this.root = this.__removeMax(this.root)
+    }
+
+    __removeMax(node) {
+        if (!node)
+            return
+        if (!node.right) {
+            this.count--
+            // 同时修改parent
+            if (node.left)
+                node.left.parent = node.parent;
+            return node.left
+
+        }
+        node.right = this.__removeMax(node.right)
+        return node
+    }
+
     remove(k) {
         this.root = this.__remove(this.root, k)
+        this.root.level = 0
     }
 
     __remove(node, k) {
@@ -165,21 +185,24 @@ class BST {
         if (k === node.k) {
             if (!node.left) {
                 this.count--;
+                node.right.parent = node.parent
                 return node.right
             }
             else if (!node.right) {
                 this.count--;
+                node.left.parent = node.parent
                 return node.left
             }
             else {//左右都有节点
                 // debugger
                 // successor取代node，父亲和孩子都要修改
                 var successor = this.__minimum(node.right)
+
                 successor.right = this.__removeMin(node.right)
                 successor.left = node.left
 
-
                 successor.parent = node.parent;
+
                 if (successor.left)
                     successor.left.parent = successor;
                 if (successor.right)

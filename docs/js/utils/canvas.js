@@ -15,6 +15,7 @@ class Stage {
     }
 
     drawBall(x, y, size) {
+        size = size > 10 ? size : 10
         this.ctx.beginPath()
         this.ctx.fillStyle = Color.RED;
         this.ctx.arc(x, y, size, 0, 2 * Math.PI);

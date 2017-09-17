@@ -3,7 +3,7 @@
  */
 const RootX = stage.canvas.width / 2;
 const RootY = 50;
-const PosOffset = stage.canvas.width / 5;
+const PosOffset = stage.canvas.width / 4;
 const BallSize = 20 + stage.canvas.width / 100
 
 class BallNode extends Node {
@@ -22,11 +22,6 @@ class BallBST extends BST {
         super();
         this.stage = stage
     }
-
-    // insert() {
-    //     this.root = this.__insert(this.root)
-    //     this.reDraw()
-    // }
 
     __insert(node, k, v, parent = null, direction = 0) {
         if (!node) {
@@ -70,30 +65,25 @@ class BallBST extends BST {
         else if (p.right && p.right === node)
             direction = 1;
 
-        node.x = p.x + (PosOffset * direction) / node.level + 1;
+        node.x = p.x + (PosOffset * direction) / (node.level + 1);
         node.y = RootY * (node.level + 1);
     }
 
 
     __drawBall(node) {
-        var size = BallSize - node.level * 2
+        var size = BallSize - node.level * 2.5
         this.stage.drawBall(node.x, node.y, size)
-        this.stage.drawText(node.x, node.y, node.k, (8 - node.level))
-        if (node.parent)
-            this.stage.drawText(node.x, node.y, node.parent.k, 5, 20, 10);
+        this.stage.drawText(node.x, node.y, node.k, (8 - node.level), 0, (20 - node.level))
+
+        // 显示父节点数字
+        // if (node.parent)
+        //     this.stage.drawText(node.x, node.y, node.parent.k, 5, 20, 8);
     }
 
     __linkBall(node) {
         if (!node.parent)
             return;
         var p = node.parent;
-        var direction = 0;
-        if (p.left && p.left === node)
-            direction = -1;
-        else if (p.right && p.right === node)
-            direction = 1;
-        node.x = p.x + (PosOffset * direction) / node.level + 1;
-        node.y = RootY * (node.level + 1);
         this.stage.drawLine(node.x, node.y, p.x, p.y)
     }
 
@@ -104,6 +94,11 @@ class BallBST extends BST {
 
     removeMinBall() {
         this.removeMin()
+        this.reDraw()
+    }
+
+    removeMaxBall() {
+        this.removeMax()
         this.reDraw()
     }
 
