@@ -68,12 +68,14 @@
             testBst = freshBST(amount, simple)
         }
         if (id === 'btnInsert') {
-            testBst.insert(num, getRandom(100))
-            testBst.reDraw()
-
+            if (num) {
+                testBst.insert(num, getRandom(100))
+                testBst.reDraw()
+            }
         }
         if (id === 'btnRemove') {
-            testBst.removeBall(num)
+            if (num)
+                testBst.removeBall(num)
         }
         if (id === 'btnRemoveMin') {
             testBst.removeMinBall()
@@ -82,8 +84,8 @@
             testBst.removeMaxBall()
         }
         if (id === 'btnRemoveRoot') {
-            if(testBst.root)
-            testBst.removeBall(testBst.root.k)
+            if (testBst.root)
+                testBst.removeBall(testBst.root.k)
         }
 
 
