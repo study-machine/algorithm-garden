@@ -23,8 +23,9 @@
 <span> | </span>
 <input id='key' type="text" style="width: 30px;text-align: center;">
 <button id="btnInsert">插入</button>
-<button id="btnRemove">移除</button>
+<button id="btnRemove">删除</button>
 <span> | </span>
+<button id="btnRemoveRoot">删除根</button>
 <button id="btnRemoveMin">删除最小</button>
 <button id="btnRemoveMax">删除最大</button>
 <canvas id="myCanvas"></canvas>
@@ -79,6 +80,10 @@
         }
         if (id === 'btnRemoveMax') {
             testBst.removeMaxBall()
+        }
+        if (id === 'btnRemoveRoot') {
+            if(testBst.root)
+            testBst.removeBall(testBst.root.k)
         }
 
 

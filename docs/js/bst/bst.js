@@ -166,8 +166,11 @@ class BST {
     }
 
     remove(k) {
+        if (!this.count)
+            return;
         this.root = this.__remove(this.root, k)
-        this.root.level = 0
+        if (this.root)
+            this.root.level = 0
     }
 
     __remove(node, k) {
@@ -185,12 +188,14 @@ class BST {
         if (k === node.k) {
             if (!node.left) {
                 this.count--;
-                node.right.parent = node.parent
+                if (node.right)
+                    node.right.parent = node.parent;
                 return node.right
             }
             else if (!node.right) {
                 this.count--;
-                node.left.parent = node.parent
+                if (node.left)
+                    node.left.parent = node.parent;
                 return node.left
             }
             else {//左右都有节点
